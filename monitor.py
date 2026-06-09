@@ -73,6 +73,7 @@ def get_offers():
 
     try:
         data = response.json()
+        print(json.dumps(data["result"][0], indent=2, ensure_ascii=False))
     except Exception as e:
         print(f"Erreur JSON : {e}")
         return []

@@ -117,7 +117,11 @@ def main():
             "Nouvelle offre VIE Allemagne/Autriche",
             body
         )
+    print(f"Nombre d'offres trouvées : {len(current)}")
 
+    for offer in current[:10]:
+        print(offer)
+    
     save_current(current)
 
 

@@ -9,8 +9,8 @@ import re
 URL = "https://mon-vie-via.businessfrance.fr/offres"
 
 COUNTRIES = [
-    "Allemagne",
-    "Autriche"
+    "ALLEMAGNE",
+    "AUTRICHE"
 ]
 
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")

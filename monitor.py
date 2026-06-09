@@ -84,9 +84,9 @@ def get_offers():
 
         publication_date = ""
         
-        if offer.get("creationDate"):
+        if offer.get("startBroadcastDate"):
             publication_date = datetime.fromisoformat(
-                offer["creationDate"].replace("Z", "+00:00")
+                offer["startBroadcastDate"].replace("Z", "+00:00")
             ).strftime("%d/%m/%Y")
             
         offers.append({

@@ -29,7 +29,13 @@ jobs:
           EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
-
+          
+      - name: Upload page
+        uses: actions/upload-artifact@v4
+        with:
+          name: page-html
+          path: page.html
+          
       - name: Commit database
         run: |
           git config user.name github-actions

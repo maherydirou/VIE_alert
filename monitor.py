@@ -124,7 +124,7 @@ def main():
         )
 
     if new_offers:
-    print(f"Nouvelles offres détectées : {len(new_offers)}")
+        print(f"Nouvelles offres détectées : {len(new_offers)}")
 
     for offer in new_offers:
         print(

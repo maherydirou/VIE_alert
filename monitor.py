@@ -74,22 +74,21 @@ def get_offers():
 
     try:
         data = response.json()
-        print(json.dumps(data["result"][0], indent=2, ensure_ascii=False))
     except Exception as e:
         print(f"Erreur JSON : {e}")
         return []
 
     offers = []
 
-    publication_date = ""
-
-    if offer.get("creationDate"):
-        publication_date = datetime.fromisoformat(
-            offer["creationDate"].replace("Z", "+00:00")
-        ).strftime("%d/%m/%Y")
-
     for offer in data["result"]:
 
+        publication_date = ""
+        
+        if offer.get("creationDate"):
+            publication_date = datetime.fromisoformat(
+                offer["creationDate"].replace("Z", "+00:00")
+            ).strftime("%d/%m/%Y")
+            
         offers.append({
             "id": offer["id"],
             "reference": offer.get("reference", ""),

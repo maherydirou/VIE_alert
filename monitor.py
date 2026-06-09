@@ -56,6 +56,10 @@ def get_offers():
     print(r.text[:1000])
     r.raise_for_status()
 
+    with open("page.html", "w", encoding="utf-8") as f:
+    f.write(r.text)
+    print("Page sauvegardée")
+
     soup = BeautifulSoup(r.text, "html.parser")
 
     offers = []

@@ -51,6 +51,9 @@ def get_offers():
     }
 
     r = requests.get(URL, headers=headers)
+    print(r.status_code)
+    print(r.url)
+    print(r.text[:1000])
     r.raise_for_status()
 
     soup = BeautifulSoup(r.text, "html.parser")

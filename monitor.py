@@ -1,17 +1,8 @@
 import requests
-from bs4 import BeautifulSoup
 import json
 import os
 import smtplib
 from email.mime.text import MIMEText
-import re
-
-URL = "https://mon-vie-via.businessfrance.fr/offres"
-
-COUNTRIES = [
-    "ALLEMAGNE",
-    "AUTRICHE"
-]
 
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
@@ -47,61 +38,56 @@ def send_email(subject, body):
 
 def get_offers():
 
-    headers = {
-        "User-Agent": "Mozilla/5.0"
+    url = "https://civiweb-api-prd.azurewebsites.net/api/Offers/search"
+
+    payload = {
+        "activitySectorId": [],
+        "companiesSizes": [],
+        "countriesIds": ["DE", "AT"],
+        "enterprisesIds": [0],
+        "geographicZones": ["5"],
+        "limit": 500,
+        "missionsDurations": [],
+        "missionsTypesIds": [],
+        "porteEnv": ["0"],
+        "query": None,
+        "skip": 0,
+        "specializationsIds": [],
+        "studiesLevelId": [],
+        "teletravail": ["0"]
     }
 
-    r = requests.get(URL, headers=headers)
-    print(r.status_code)
-    print(r.url)
-    print(r.text[:1000])
-    r.raise_for_status()
+    headers = {
+        "Content-Type": "application/json",
+        "Origin": "https://mon-vie-via.businessfrance.fr"
+    }
 
-    matches = re.findall(r"/_nuxt/[A-Za-z0-9]+\.js", r.text)
-    print("FICHIERS JS TROUVES :")
+    response = requests.post(
+        url,
+        json=payload,
+        headers=headers,
+        timeout=30
+    )
 
-    for m in matches:
-        print(m)
-        
-    with open("page.html", "w", encoding="utf-8") as f:
-        f.write(r.text)
-    print("Page sauvegardée")
+    response.raise_for_status()
 
-    soup = BeautifulSoup(r.text, "html.parser")
+    try:
+        data = response.json()
+    except Exception as e:
+        print(f"Erreur JSON : {e}")
+        return []
 
     offers = []
 
-    cards = soup.find_all("a")
+    for offer in data["result"]:
 
-    for card in cards:
-
-        text = card.get_text(" ", strip=True)
-
-        upper = text.upper()
-
-        if any(country in upper for country in COUNTRIES):
-
-            href = card.get("href")
-
-            if href:
-
-                if href.startswith("/"):
-                    href = "https://mon-vie-via.businessfrance.fr" + href
-
-                offers.append({
-                    "title": text[:200],
-                    "url": href
-                })
-
-    unique = []
-    seen = set()
-
-    for offer in offers:
-        if offer["url"] not in seen:
-            unique.append(offer)
-            seen.add(offer["url"])
-
-    return unique
+        offers.append({
+            "id": offer["id"],
+            "title": offer.get("missionTitle", ""),
+            "company": offer.get("organizationName", "")
+        })
+    print(f"Nombre d'offres récupérées : {len(offers)}")
+    return offers
 
 
 def main():
@@ -109,12 +95,16 @@ def main():
     previous = load_previous()
 
     current = get_offers()
+    if not previous:
+        print("Premier lancement : initialisation de la base")
+        save_current(current)
+        return
 
-    previous_urls = {o["url"] for o in previous}
+    previous_ids = {o["id"] for o in previous}
 
     new_offers = [
         o for o in current
-        if o["url"] not in previous_urls
+        if o["id"] not in previous_ids
     ]
 
     if new_offers:
@@ -123,19 +113,25 @@ def main():
 
         for offer in new_offers:
             body += (
-                f"{offer['title']}\n"
-                f"{offer['url']}\n\n"
+                f"Entreprise : {offer['company']}\n"
+                f"Mission : {offer['title']}\n"
+                f"ID : {offer['id']}\n\n"
             )
 
         send_email(
             "Nouvelle offre VIE Allemagne/Autriche",
             body
         )
-    print(f"Nombre d'offres trouvées : {len(current)}")
 
-    for offer in current[:10]:
-        print(offer)
-    
+    if new_offers:
+    print(f"Nouvelles offres détectées : {len(new_offers)}")
+
+    for offer in new_offers:
+        print(
+            f"{offer['company']} - "
+            f"{offer['title']} "
+            f"(ID {offer['id']})"
+        )
     save_current(current)
 
 

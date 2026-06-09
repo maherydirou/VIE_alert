@@ -3,6 +3,7 @@ import json
 import os
 import smtplib
 from email.mime.text import MIMEText
+from datetime import datetime
 
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
@@ -80,13 +81,31 @@ def get_offers():
 
     offers = []
 
+    publication_date = ""
+
+    if offer.get("creationDate"):
+        publication_date = datetime.fromisoformat(
+            offer["creationDate"].replace("Z", "+00:00")
+        ).strftime("%d/%m/%Y")
+
     for offer in data["result"]:
 
         offers.append({
             "id": offer["id"],
+            "reference": offer.get("reference", ""),
             "title": offer.get("missionTitle", ""),
-            "company": offer.get("organizationName", "")
+            "company": offer.get("organizationName", ""),
+            "city": offer.get("cityName", ""),
+            "country": offer.get("countryName", ""),
+            "publication_date": publication_date,
+            "duration_months": offer.get("missionDuration", ""),
+            "mission_profile": offer.get("missionProfile", ""),
+            "indemnity": offer.get("indemnite", ""),
+            "contact_name": offer.get("contactName", ""),
+            "contact_email": offer.get("contactEmail", ""),
+            "url": f"https://mon-vie-via.businessfrance.fr/offres/{offer['id']}"
         })
+        
     print(f"Nombre d'offres récupérées : {len(offers)}")
     return offers
 
@@ -114,9 +133,35 @@ def main():
 
         for offer in new_offers:
             body += (
-                f"Entreprise : {offer['company']}\n"
-                f"Mission : {offer['title']}\n"
-                f"ID : {offer['id']}\n\n"
+                "==================================================\n"
+                f"MISSION : {offer['title']}\n\n"
+            
+                f"ENTREPRISE : {offer['company']}\n"
+            
+                f"LOCALISATION : {offer['city']} ({offer['country']})\n"
+            
+                f"DATE DE PUBLICATION : {offer['publication_date']}\n"
+            
+                f"DURÉE : {offer['duration_months']} mois\n"
+            
+                f"INDEMNITÉ : {offer['indemnity']} €\n"
+            
+                f"RÉFÉRENCE : {offer['reference']}\n\n"
+            
+                "PROFIL RECHERCHÉ\n"
+                "----------------\n"
+                f"{offer['mission_profile']}\n\n"
+            
+                "CONTACT\n"
+                "-------\n"
+                f"{offer['contact_name']}\n"
+                f"{offer['contact_email']}\n\n"
+            
+                "LIEN DE L'OFFRE\n"
+                "--------------\n"
+                f"{offer['url']}\n"
+            
+                "==================================================\n\n"
             )
 
         send_email(

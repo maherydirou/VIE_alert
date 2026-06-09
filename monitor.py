@@ -4,6 +4,7 @@ import json
 import os
 import smtplib
 from email.mime.text import MIMEText
+import re
 
 URL = "https://mon-vie-via.businessfrance.fr/offres"
 
@@ -56,6 +57,12 @@ def get_offers():
     print(r.text[:1000])
     r.raise_for_status()
 
+    matches = re.findall(r"/_nuxt/[A-Za-z0-9]+\.js", r.text)
+    print("FICHIERS JS TROUVES :")
+
+    for m in matches:
+        print(m)
+        
     with open("page.html", "w", encoding="utf-8") as f:
         f.write(r.text)
     print("Page sauvegardée")

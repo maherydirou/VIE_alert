@@ -2,7 +2,7 @@ name: VIE Monitor
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '17,47 * * * *'
   workflow_dispatch:
 
 jobs:

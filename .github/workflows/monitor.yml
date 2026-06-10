@@ -7,14 +7,12 @@ on:
 
 jobs:
   monitor:
-
     runs-on: ubuntu-latest
 
     permissions:
       contents: write
 
     steps:
-
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
@@ -28,16 +26,15 @@ jobs:
           EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
-          
+
       - name: Upload page
         uses: actions/upload-artifact@v4
         with:
           name: page-html
           path: page.html
-          
+
       - name: Commit database
         run: |
-            
           git config user.name github-actions
           git config user.email github-actions@github.com
 

@@ -2,8 +2,7 @@ name: VIE Monitor
 
 on:
   schedule:
-    - cron: '13,43 * * * *'
-
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -38,6 +37,7 @@ jobs:
           
       - name: Commit database
         run: |
+            
           git config user.name github-actions
           git config user.email github-actions@github.com
 

@@ -9,6 +9,12 @@ EMAIL_SENDER = os.getenv("EMAIL_SENDER")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 EMAIL_RECEIVER = os.getenv("EMAIL_RECEIVER")
 
+COUNTRIES = [
+    "DE", #Allemagne
+    "AT", #Autriche
+    "CH" #Suisse
+]
+
 
 def load_previous():
     if os.path.exists("offers.json"):
@@ -44,7 +50,7 @@ def get_offers():
     payload = {
         "activitySectorId": [],
         "companiesSizes": [],
-        "countriesIds": ["DE", "AT"],
+        "countriesIds": COUNTRIES,
         "enterprisesIds": [0],
         "geographicZones": ["5"],
         "limit": 500,

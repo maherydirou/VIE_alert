@@ -48,20 +48,8 @@ def get_offers():
     url = "https://civiweb-api-prd.azurewebsites.net/api/Offers/search"
 
     payload = {
-        "activitySectorId": [],
-        "companiesSizes": [],
         "countriesIds": COUNTRIES,
-        "enterprisesIds": [0],
-        "geographicZones": ["5"],
-        "limit": 500,
-        "missionsDurations": [],
-        "missionsTypesIds": [],
-        "porteEnv": ["0"],
-        "query": None,
-        "skip": 0,
-        "specializationsIds": [],
-        "studiesLevelId": [],
-        "teletravail": ["0"]
+        "limit": 500
     }
 
     headers = {

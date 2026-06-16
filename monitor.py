@@ -4,6 +4,7 @@ import os
 import smtplib
 from email.mime.text import MIMEText
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
@@ -102,12 +103,63 @@ def get_offers():
     print(f"Nombre d'offres récupérées : {len(offers)}")
     return offers
 
+def get_today_offers(offers):
+    today = datetime.now().strftime("%d/%m/%Y")
+    return [
+        offer for offer in offers
+        if offer.get("publication_date") == today
+    ]
 
 def main():
 
     previous = load_previous()
 
     current = get_offers()
+    today_offers = get_today_offers(current)
+    now = datetime.now(ZoneInfo("EUrope/Paris")).time()
+
+    if time(18,00) <= now : #<= time(18,30) :
+        recap = ""
+
+        for offer in today_offers:
+            recap += (
+                "=========================\n"
+                f"MISSION : {offer['title']}\n\n"
+            
+                f"ENTREPRISE : {offer['company']}\n"
+            
+                f"LOCALISATION : {offer['city']} ({offer['country']})\n"
+            
+                f"DATE DE PUBLICATION : {offer['publication_date']}\n"
+            
+                f"DURÉE : {offer['duration_months']} mois\n"
+            
+                f"INDEMNITÉ : {offer['indemnity']} €\n"
+            
+                f"RÉFÉRENCE : {offer['reference']}\n\n"
+            
+                "PROFIL RECHERCHÉ\n"
+                "----------------\n"
+                f"{offer['mission_profile']}\n\n"
+            
+                "CONTACT\n"
+                "-------\n"
+                f"{offer['contact_name']}\n"
+                f"{offer['contact_email']}\n\n"
+            
+                "LIEN DE L'OFFRE\n"
+                "--------------\n"
+                f"{offer['url']}\n"
+            
+                "===========================\n\n"
+            )
+            
+        send_email(
+            "Récapitulatif offres VIE Allemagne/Autriche/Suisse",
+            recap
+        )
+        
+    
     if not previous:
         print("Premier lancement : initialisation de la base")
         save_current(current)
@@ -162,15 +214,6 @@ def main():
             body
         )
 
-    if new_offers:
-        print(f"Nouvelles offres détectées : {len(new_offers)}")
-
-    for offer in new_offers:
-        print(
-            f"{offer['company']} - "
-            f"{offer['title']} "
-            f"(ID {offer['id']})"
-        )
     save_current(current)
 
 

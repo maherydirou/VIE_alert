@@ -118,7 +118,7 @@ def main():
     today_offers = get_today_offers(current)
     now = datetime.now(ZoneInfo("Europe/Paris")).time()
 
-    if time(18,00) <= now : #<= time(18,30) :
+    if time(18,00) <= now <= time(18,30) :
         recap = ""
 
         for offer in today_offers:

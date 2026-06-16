@@ -3,7 +3,7 @@ import json
 import os
 import smtplib
 from email.mime.text import MIMEText
-from datetime import datetime
+from datetime import datetime, time
 from zoneinfo import ZoneInfo
 
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")

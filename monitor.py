@@ -210,7 +210,7 @@ def main():
             )
 
         send_email(
-            "Nouvelle offre VIE Allemagne/Autriche",
+            "Nouvelle offre VIE Allemagne/Autriche/Suisse",
             body
         )
 

@@ -54,8 +54,13 @@ def get_offers():
     }
 
     headers = {
+        "Accept": "application/json, text/plain, */*",
         "Content-Type": "application/json",
-        "Origin": "https://mon-vie-via.businessfrance.fr"
+        "Origin": "https://mon-vie-via.businessfrance.fr",
+        "Referer": "https://mon-vie-via.businessfrance.fr/",
+        "User-Agent": "Mozilla/5.0"
+        #"Content-Type": "application/json",
+       # "Origin": "https://mon-vie-via.businessfrance.fr"
     }
 
     response = requests.post(

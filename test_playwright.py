@@ -1,3 +1,4 @@
+
 from playwright.sync_api import sync_playwright
 
 with sync_playwright() as p:
@@ -31,6 +32,22 @@ with sync_playwright() as p:
     window.__NUXT__.config
     """)
     )
+
+    print(page.evaluate("""
+        Object.keys($nuxt)
+        """))
+
+    print(page.evaluate("""
+        $nuxt.$data
+        """))
+
+    print(page.evaluate("""
+        $nuxt.$store ? Object.keys($nuxt.$store) : "pas de store"
+        """))
+
+    print(page.evaluate("""
+        $nuxt.$children.length
+        """))
 
     page.wait_for_timeout(5000)
 

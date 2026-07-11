@@ -26,11 +26,11 @@ with sync_playwright() as p:
     page.wait_for_timeout(1000)
 
     # Sélectionne Europe occidentale
-    page.get_by_text(
-        "EUROPE OCCIDENTALE",
-        exact=True
-    ).click()
-
+    page.locator("span.multiselect__option span", has_text="EUROPE OCCIDENTALE").click()
+    
+    page.screenshot(path="zone.png")
+    print("Capture réalisée")
+    
     print("Zone sélectionnée")
 
     page.wait_for_timeout(3000)

@@ -60,7 +60,7 @@ def get_offers():
         "Referer": "https://mon-vie-via.businessfrance.fr/",
         "Origin": "https://mon-vie-via.businessfrance.fr",
         "Content-Type": "application/json",
-        "X-API-KEY": "COPIE_EXACTEMENT_LA_CLE_DE_WINDOW.__NUXT__.CONFIG"
+        "X-API-KEY": "l+KwpoLPiXlsjxNT/NQ2iOFz8+iuygxAODs9FeAEWYM="
     }
 
     print(headers)

@@ -54,15 +54,17 @@ def get_offers():
     }
 
     headers = {
-        "Accept": "application/json, text/plain, */*",
-        "Content-Type": "application/json",
-        "Origin": "https://mon-vie-via.businessfrance.fr",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:151.0) Gecko/20100101 Firefox/151.0",
+        "Accept": "*/*",
+        "Accept-Language": "en-GB,en;q=0.9",
         "Referer": "https://mon-vie-via.businessfrance.fr/",
-        "User-Agent": "Mozilla/5.0"
-        #"Content-Type": "application/json",
-       # "Origin": "https://mon-vie-via.businessfrance.fr"
+        "Origin": "https://mon-vie-via.businessfrance.fr",
+        "Content-Type": "application/json",
+        "X-API-KEY": "COPIE_EXACTEMENT_LA_CLE_DE_WINDOW.__NUXT__.CONFIG"
     }
 
+    print(headers)
+    
     response = requests.post(
         url,
         json=payload,
@@ -70,7 +72,17 @@ def get_offers():
         timeout=30
     )
 
-    response.raise_for_status()
+    print(response.status_code)
+    print(response.headers)
+    print(response.text)
+
+    print("Status :", response.status_code)
+    print(response.text)
+    
+    if response.status_code != 200:
+        return []
+    
+    data = response.json()
 
     try:
         data = response.json()

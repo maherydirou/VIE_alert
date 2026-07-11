@@ -1,9 +1,12 @@
 from playwright.sync_api import sync_playwright
 
 with sync_playwright() as p:
-    browser = p.chromium.launch(headless=False)
 
-    page = browser.new_page()
+    browser = p.chromium.launch(headless=True)
+
+    page = browser.new_page(
+        viewport={"width": 1600, "height": 1200}
+    )
 
     page.goto(
         "https://mon-vie-via.businessfrance.fr/offres",
@@ -12,16 +15,24 @@ with sync_playwright() as p:
 
     page.wait_for_timeout(3000)
 
+    print(page.title())
+
     # Ouvre le filtre Zone
-    page.locator("span.multiselect__placeholder", has_text="Zone").click()
+    page.locator(
+        "span.multiselect__placeholder",
+        has_text="Zone"
+    ).click()
 
-    page.wait_for_timeout(500)
+    page.wait_for_timeout(1000)
 
-    # Choisit Europe occidentale
-    page.get_by_text("EUROPE OCCIDENTALE", exact=True).click()
+    # Sélectionne Europe occidentale
+    page.get_by_text(
+        "EUROPE OCCIDENTALE",
+        exact=True
+    ).click()
 
     print("Zone sélectionnée")
 
-    page.wait_for_timeout(10000)
+    page.wait_for_timeout(3000)
 
     browser.close()

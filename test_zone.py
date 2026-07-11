@@ -59,6 +59,25 @@ with sync_playwright() as p:
 
     print("Pays OK")
 
+    # Lance la recherche
+
+    page.locator("button.valid_search").click()
+    
+    print("Recherche lancée")
+    
+    page.wait_for_load_state("networkidle")
+    
+    page.wait_for_timeout(5000)
+    
+    print("Recherche terminée")
+
+    print(page.url)
+
+    print(
+        "Nombre d'offres :",
+        page.locator("div.figure_container").count()
+    )
+
     page.screenshot(path="test.png")
 
     browser.close()

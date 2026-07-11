@@ -73,10 +73,36 @@ with sync_playwright() as p:
 
     print(page.url)
 
-    print(
-        "Nombre d'offres :",
-        page.locator("div.figure_container").count()
-    )
+    previous_ids = {o["id"] for o in previous}
+
+    while True:
+    
+        offres = page.locator("div.figure_container")
+    
+        stop = False
+    
+        for i in range(offres.count()):
+    
+            offre = offres.nth(i)
+    
+            href = offre.locator("a.postuler").get_attribute("href")
+            offer_id = int(href.split("/")[-1])
+    
+            if offer_id in previous_ids:
+                stop = True
+                break
+    
+            # Sinon on extrait toutes les infos de la carte
+            title = offre.locator("h2.mission-title").inner_text()
+            company = offre.locator("h3.organization-name").inner_text()
+            location = offre.locator("h2.location").inner_text()
+    
+            print(offer_id, title)
+    
+        if stop:
+            break
+    
+        # Cliquer sur "Voir plus d'offres"
 
     page.screenshot(path="test.png")
 

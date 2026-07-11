@@ -23,7 +23,7 @@ jobs:
         run: |
           playwright install chromium
       
-      - run: python monitor.py
+      - run: python test_playwright.py
         env:
           EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}

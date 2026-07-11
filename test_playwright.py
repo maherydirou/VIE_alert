@@ -14,6 +14,24 @@ with sync_playwright() as p:
         wait_until="networkidle"
     )
 
+    print(
+        page.evaluate("""
+    Object.keys(window)
+    """)
+    )
+
+    print(
+        page.evaluate("""
+    typeof window.__NUXT__
+    """)
+    )
+
+    print(
+        page.evaluate("""
+    window.__NUXT__.config
+    """)
+    )
+
     page.wait_for_timeout(5000)
 
     browser.close()
